@@ -1,9 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Mvc;
 using SMART_PRINTER_SERVICE.Models;
 using System.Diagnostics;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SMART_PRINTER_SERVICE.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -17,7 +21,14 @@ namespace SMART_PRINTER_SERVICE.Controllers
         {
             return View();
         }
+        public async Task<IActionResult> Logout()
+        {
+            // Perform sign-out
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
+            // Redirect to the login page
+            return RedirectToAction("LoginTo", "Login");
+        }
         public IActionResult Print()
         {
             return View();
